@@ -24,7 +24,7 @@ const generateAccessToken = (id, roles) => {
 class AuthController {
   async registration(req, res) {
     try {
-      const { email, password } = req.body;
+      const { email, password, name, surname, fathername, status, directions } = req.body;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: 'Ошибка при регистрации' });
@@ -36,7 +36,15 @@ class AuthController {
           .json({ message: 'Пользователь c таким email уже существует' });
       }
       const hashPassword = bcrypt.hashSync(password, 7);
-      const user = new User({ email, password: hashPassword });
+      const user = new User({
+        email,
+        password: hashPassword,
+        name,
+        surname,
+        fathername,
+        status,
+        directions,
+      });
       await user.save();
       return res.json({ message: 'Пользователь успешно добавлен' });
     } catch (e) {
@@ -127,29 +135,18 @@ class AuthController {
   async updateUserSettings(req, res) {
     try {
       const { userId } = req.params;
-      const {
-        avatar,
-        banner,
-        name,
-        pageTitle,
-        description,
-        seeBanner,
-        seeAvatar,
-        seeTitleDesc,
-      } = req.body;
+      const { avatar, name, directions, faculty } = req.body;
 
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ message: 'Пользователь не найден' });
       }
       if (avatar) user.avatar = avatar;
-      if (banner) user.banner = banner;
+
       if (name) user.name = name;
-      if (pageTitle) user.pageTitle = pageTitle;
-      if (description) user.description = description;
-      user.seeBanner = seeBanner;
-      user.seeAvatar = seeAvatar;
-      user.seeTitleDesc = seeTitleDesc;
+
+      if (directions) user.directions = directions;
+      if (faculty) user.faculty = faculty;
       await user.save();
 
       // Возвращаем успешный ответ
@@ -168,6 +165,15 @@ class AuthController {
         return res.status(404).json({ message: 'Пользователь не найден' });
       }
       return res.json(user);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Ошибка сервера' });
+    }
+  }
+  async getStudents(req, res) {
+    try {
+      const students = await User.find({ status: 'Студент' }).select('-password');
+      return res.json(students);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Ошибка сервера' });

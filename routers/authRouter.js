@@ -34,11 +34,8 @@ router.post('/forgot_password', controller.forgotPassword);
 
 // Сброс пароля
 router.post('/reset_password', controller.resetPassword);
-router.put(
-  '/:userId/update_data',
-  upload.single('banner'),
-  controller.updateUserSettings
-);
+router.put('/:userId/update_data', upload.none(), controller.updateUserSettings);
 router.get('/:userId/get_data', authMiddleware, controller.getUserData);
+router.get('/', controller.getStudents);
 
 module.exports = router;

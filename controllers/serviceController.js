@@ -1,69 +1,48 @@
-const Service = require('../models/Service');
+const Service = require('../models/Student');
+const Student = require('../models/Student');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
 // Настройка места для сохранения загруженных файлов
 
-exports.createService = async (req, res) => {
+// Предполагается, что модель студента находится в файле studentModel.js
+
+exports.createStudent = async (req, res) => {
   try {
     const {
-      cover,
+      avatar,
+      banner,
       name,
       description,
-      price,
-      currency,
-      additionalCost,
-      tags,
-      everyndays,
-      weekdays,
-      interval,
-      bufferTime,
-      notificationsMe,
-      notificationsClient,
-      numberClient,
-      nameClient,
-      seeInfo,
-      alwaysService,
-      everyDay,
-      onlyDay,
-      nearlyDays,
-      fromDate,
-      beforeDate,
-      workTime,
+      grade,
+      people,
+      teachers,
+      doctors,
+      candidate,
+      science,
+      reviews,
     } = req.body;
-    const userId = req.params.userId;
 
-    const service = new Service({
-      userId,
-      cover,
+    // Создание нового студента
+    const student = new Student({
+      avatar,
+      banner,
       name,
       description,
-      price,
-      currency,
-      additionalCost,
-      tags,
-      everyndays,
-      weekdays,
-      interval,
-      bufferTime,
-      notificationsMe,
-      notificationsClient,
-      numberClient,
-      nameClient,
-      seeInfo,
-      alwaysService,
-      everyDay,
-      onlyDay,
-      nearlyDays,
-      fromDate,
-      beforeDate,
-      workTime,
+      grade,
+      people,
+      teachers,
+      doctors,
+      candidate,
+      science,
+      reviews,
     });
 
-    await service.save();
+    // Сохранение студента в базе данных
+    await student.save();
 
-    res.status(201).json({ message: 'Service created successfully', service });
+    res.status(201).json({ message: 'Student created successfully', student });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -88,14 +67,22 @@ exports.updateServiceById = async (req, res) => {
   }
 };
 
-exports.getServiceById = async (req, res) => {
+exports.getStudentById = async (req, res) => {
   try {
-    const serviceId = req.params.id;
-    const service = await Service.findById(serviceId);
-    if (!service) {
-      return res.status(404).json({ error: 'Service not found' });
+    const studentId = req.params.id;
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ error: 'Student not found' });
     }
-    res.status(200).json({ service });
+    res.status(200).json({ student });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.getAllStudents = async (req, res) => {
+  try {
+    const students = await Student.find();
+    res.status(200).json({ students });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -103,8 +90,20 @@ exports.getServiceById = async (req, res) => {
 exports.getServicesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const services = await Service.find({ userId: userId });
-    res.status(200).json(services);
+    const students = await Student.find({ userId: userId });
+    res.status(200).json({ students });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+exports.deleteStudentById = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const deletedStudent = await Student.findByIdAndDelete(studentId);
+    if (!deletedStudent) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+    res.status(200).json({ message: 'Student deleted successfully', deletedStudent });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

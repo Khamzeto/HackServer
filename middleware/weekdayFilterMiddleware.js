@@ -1,6 +1,6 @@
 // weekdayAvailabilityMiddleware.js
 
-const Service = require("../models/Service");
+const Service = require('../models/Student');
 
 const weekdayAvailabilityMiddleware = async (req, res, next) => {
   try {
@@ -23,8 +23,8 @@ const weekdayAvailabilityMiddleware = async (req, res, next) => {
     req.availableServices = availableServices;
     next();
   } catch (error) {
-    console.error("Error in weekdayAvailabilityMiddleware:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error('Error in weekdayAvailabilityMiddleware:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 };
 

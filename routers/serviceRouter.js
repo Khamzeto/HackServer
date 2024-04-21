@@ -22,9 +22,11 @@ const upload = multer({ storage: storage });
 router.use(authMiddleware);
 */
 
-router.get('/only/:id', serviceController.getServiceById);
+router.get('/only/:id', serviceController.getStudentById);
 router.get('/:userId', serviceController.getServicesByUserId);
-router.post('/create/:userId', upload.single('cover'), serviceController.createService);
+router.get('/', serviceController.getAllStudents);
+router.post('/create', upload.single('cover'), serviceController.createStudent);
+router.delete('/only/:id', serviceController.deleteStudentById);
 
 router.put('/:serviceId', upload.none(), serviceController.updateServiceById);
 

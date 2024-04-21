@@ -20,12 +20,12 @@ app.use('/collegaue', collegaueRouter);
 // Middleware для обслуживания статических файлов из папки 'uploads'
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const PORT = 4000;
+const PORT = 4007;
 
 const start = async () => {
   try {
     await mongoose.connect(
-      'mongodb://localhost:27017/booke', // Замените 'mydatabase' на имя вашей базы данных
+      'mongodb://localhost:27017/gouni', // Замените 'mydatabase' на имя вашей базы данных
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
